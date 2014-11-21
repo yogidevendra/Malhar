@@ -12,13 +12,11 @@ import org.apache.solr.servlet.SolrRequestParsers;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.datatorrent.api.DefaultOutputPort;
 import com.datatorrent.lib.testbench.CollectorTestSink;
 
 public class SolrInputOperatorTest extends SolrOperatorTest
 {
   private AbstractSolrInputOperator<SolrDocument> inputOperator;
-  final public transient DefaultOutputPort<SolrDocument> outputPort = new DefaultOutputPort<SolrDocument>();
   private CollectorTestSink testSink;
 
   @Before
@@ -29,7 +27,7 @@ public class SolrInputOperatorTest extends SolrOperatorTest
     inputOperator = new SolrInputOperator();
     inputOperator.setup(null);
     testSink = new CollectorTestSink();
-    outputPort.setSink(testSink);
+    inputOperator.outputPort.setSink(testSink);
   }
 
   @Test
