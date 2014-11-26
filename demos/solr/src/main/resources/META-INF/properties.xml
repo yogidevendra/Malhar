@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration>
+
+  <!-- Settings for SolrOutputOperatorDemo -->
+  <property>
+    <name>dt.application.SolrOutputOperatorDemo.attr.CONTAINER_MEMORY_MB</name>
+    <value>4096</value>
+  </property>
+  <property>
+    <name>dt.application.SolrOutputOperatorDemo.operator.SolrOutputOperator.solrServerConnector.solrServerURL</name>
+    <value>http://localhost:8983/solr/collection1</value>
+  </property>
+
+  <!-- Settings for SolrInputOperatorDemo -->
+   <property>
+    <name>dt.application.SolrInputOperatorDemo.attr.CONTAINER_MEMORY_MB</name>
+    <value>4096</value>
+  </property>
+  <property>
+    <name>dt.application.SolrInputOperatorDemo.operator.solrReader.solrServerConnector.solrServerURL</name>
+    <value>http://localhost:8983/solr/collection1</value>
+  </property>
+</configuration>

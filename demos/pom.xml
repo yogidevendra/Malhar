@@ -27,6 +27,7 @@
     <module>elasticsearch</module>
     <module>visualdata</module>
     <module>distributedistinct</module>
+    <module>Solr</module>
   </modules>
 
 </project>
