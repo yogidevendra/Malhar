@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<configuration>
+	<property>
+		<name>dt.attr.MASTER_MEMORY_MB</name>
+		<value>1024</value>
+	</property>
+	<!-- properties for ElasticSearchOutputOperatorDemo -->
+	<property>
+		<name>dt.application.ElasticSearchOutputOperatorDemo.attr.CONTAINER_MEMORY_MB
+		</name>
+		<value>1024</value>
+	</property>
+	<property>
+		<name>dt.application.ElasticSearchOutputOperatorDemo.operator.ElasticSearchIndexWriter.indexName
+		</name>
+		<value>product_requests</value>
+	</property>
+	<property>
+		<name>dt.application.ElasticSearchOutputOperatorDemo.operator.ElasticSearchIndexWriter.type
+		</name>
+		<value>purchase</value>
+	</property>
+	<property>
+		<name>dt.application.ElasticSearchOutputOperatorDemo.operator.ElasticSearchIndexWriter.idField
+		</name>
+		<value>RequestId</value>
+	</property>
+	<property>
+		<name>dt.application.ElasticSearchOutputOperatorDemo.operator.ElasticSearchIndexWriter.store.hostName
+		</name>
+		<value>localhost</value>
+	</property>
+	<property>
+		<name>dt.application.ElasticSearchOutputOperatorDemo.operator.ElasticSearchIndexWriter.store.port
+		</name>
+		<value>9300</value>
+	</property>
+
+
+	<!-- properties for ElasticSearchOutputOperatorDemo -->
+	<property>
+		<name>dt.application.ElasticSearchInputOperatorDemo.attr.CONTAINER_MEMORY_MB
+		</name>
+		<value>1024</value>
+	</property>
+	<property>
+		<name>dt.application.ElasticSearchInputOperatorDemo.operator.ElasticSearchInputQuery.indexName
+		</name>
+		<value>product_requests</value>
+	</property>
+	<property>
+		<name>dt.application.ElasticSearchInputOperatorDemo.operator.ElasticSearchInputQuery.type
+		</name>
+		<value>purchase</value>
+	</property>
+	<property>
+		<name>dt.application.ElasticSearchInputOperatorDemo.operator.ElasticSearchInputQuery.idField
+		</name>
+		<value>RequestId</value>
+	</property>
+	<property>
+		<name>dt.application.ElasticSearchInputOperatorDemo.operator.ElasticSearchInputQuery.store.hostName
+		</name>
+		<value>localhost</value>
+	</property>
+	<property>
+		<name>dt.application.ElasticSearchInputOperatorDemo.operator.ElasticSearchInputQuery.store.port
+		</name>
+		<value>9300</value>
+	</property>
+
+</configuration>
