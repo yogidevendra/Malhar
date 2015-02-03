@@ -502,6 +502,7 @@ public abstract class AbstractFileOutputOperator<INPUT> extends BaseOperator
    */
   protected void processTuple(INPUT tuple)
   {
+    LOG.debug("processTuple tuple={}", tuple);
     String fileName = getFileName(tuple);
 
     if (Strings.isNullOrEmpty(fileName)) {

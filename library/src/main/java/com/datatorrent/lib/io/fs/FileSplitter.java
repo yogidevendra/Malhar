@@ -121,7 +121,9 @@ public class FileSplitter extends AbstractFileInputOperator<FileSplitter.FileMet
         filesMetadataOutput.emit(fileMetadata);
         Iterator<BlockMetadata> iterator = new BlockMetadataIterator(this, fileMetadata, blockSize);
         while (iterator.hasNext()) {
-          this.blocksMetadataOutput.emit(iterator.next());
+          BlockMetadata blockMetadata = iterator.next();
+          this.blocksMetadataOutput.emit(blockMetadata);
+          LOG.debug("FileSplitter:emitTuples {}:{}", blockMetadata.getFilePath(),blockMetadata.offset);
         }
       }
       catch (IOException e) {

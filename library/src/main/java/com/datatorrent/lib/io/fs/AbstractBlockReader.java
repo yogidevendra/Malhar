@@ -108,10 +108,12 @@ public abstract class AbstractBlockReader<R> extends BaseOperator implements
     @Override
     public void process(FileSplitter.BlockMetadata blockMetadata)
     {
+      LOG.debug("process {}:{}", blockMetadata.getFilePath(),blockMetadata.getOffset());
       blockQueue.add(blockMetadata);
       if (blocksPerWindow < threshold) {
         processHeadBlock();
       }
+      LOG.debug("end of process {}:{}", blockMetadata.getFilePath(),blockMetadata.getOffset());
     }
 
   };
@@ -173,6 +175,7 @@ public abstract class AbstractBlockReader<R> extends BaseOperator implements
   @Override
   public void handleIdleTime()
   {
+    LOG.debug("handleIdleTime BlockQueueSize={}: blocksPerWindow={}", blockQueue.size(),blocksPerWindow);
     if (blockQueue.isEmpty() || blocksPerWindow >= threshold) {
       /* nothing to do here, so sleep for a while to avoid busy loop */
       try {
@@ -188,21 +191,27 @@ public abstract class AbstractBlockReader<R> extends BaseOperator implements
       }
       while (blocksPerWindow < threshold && !blockQueue.isEmpty());
     }
+    LOG.debug("end handleIdleTime BlockQueueSize={}: blocksPerWindow={}", blockQueue.size(),blocksPerWindow);
   }
 
   private void processHeadBlock()
   {
     FileSplitter.BlockMetadata top = blockQueue.poll();
+    LOG.debug("processHeadBlock {}:{}", top.getFilePath(),top.getOffset());
     try {
       if (blocksMetadataOutput.isConnected()) {
         blocksMetadataOutput.emit(top);
       }
       processBlockMetadata(top);
+      LOG.debug("processHeadBlock: return from processBlockMetadata");
       blocksPerWindow++;
+      LOG.debug("processHeadBlock: blocksPerWindow={}", blocksPerWindow);
     }
     catch (IOException e) {
+      LOG.debug("Exception {}", e.getCause());
       throw new RuntimeException(e);
     }
+    LOG.debug("end of processHeadBlock {}:{}", top.getFilePath(),top.getOffset());
   }
 
   @Override
@@ -224,7 +233,9 @@ public abstract class AbstractBlockReader<R> extends BaseOperator implements
     finally {
       closeCurrentReader();
     }
+    LOG.debug("before udpate counter");
     counters.getCounter(ReaderCounterKeys.TIME).add(System.currentTimeMillis() - blockStartTime);
+    LOG.debug("after udpate counter");
   }
 
   /**
@@ -241,20 +252,24 @@ public abstract class AbstractBlockReader<R> extends BaseOperator implements
     while (blockOffset < blockLength) {
 
       Entity entity = readEntity(blockMetadata, blockOffset);
-
+      LOG.debug("readBlock entity={}", entity);
       //The construction of entity was not complete as record end was never found.
       if (entity == null) {
         break;
       }
       counters.getCounter(ReaderCounterKeys.BYTES).add(entity.usedBytes);
+      LOG.debug("readBlock usedBytes={}", entity.usedBytes);
       blockOffset += entity.usedBytes;
-
+      LOG.debug("readBlock blockOffset={}", blockOffset);
       R record = convertToRecord(entity.record);
-
+      LOG.debug("readBlock record={}", record);
       //If the record is partial then ignore the record.
       if (isRecordValid(record)) {
+        LOG.debug("readBlock isRecordValid={}", isRecordValid(record));
         counters.getCounter(ReaderCounterKeys.RECORDS).increment();
+        LOG.debug("before emit record={}", record);
         messages.emit(new ReaderRecord<R>(blockMetadata.getBlockId(), record));
+        LOG.debug("after emit record={}", record);
       }
     }
   }
@@ -281,8 +296,10 @@ public abstract class AbstractBlockReader<R> extends BaseOperator implements
     if (inputStream != null) {
       LOG.debug("close reader");
       inputStream.close();
+      LOG.debug("closeCurrentReader: after close");
       inputStream = null;
     }
+    LOG.debug("closeCurrentReader: returning");
   }
 
   /**
