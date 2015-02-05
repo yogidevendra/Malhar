@@ -930,19 +930,6 @@ public class AbstractFileInputOperatorTest
     Assert.assertArrayEquals("Directory scanner output not matching", results, passedNames.toArray());
   }
 
-  /**
-   * 
-   */
-  private void createFile(String fileName) throws Exception
-  {
-    HashSet<String> lines = Sets.newHashSet();
-    for (int line = 0; line < 2; line++) {
-      lines.add("file:" + fileName + "_line" + line);
-    }
-    FileUtils.write(new File(testMeta.dir, fileName), StringUtils.join(lines, '\n'));
-  }
-
-
 
   private static class TestStorageManager extends IdempotentStorageManager.FSIdempotentStorageManager
   {
