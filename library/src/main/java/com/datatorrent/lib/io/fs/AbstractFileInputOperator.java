@@ -976,7 +976,9 @@ public abstract class AbstractFileInputOperator<T> implements InputOperator, Par
   {
     private static final long serialVersionUID = 4535844463258899929L;
     private String filePatternRegexp;
+    private String ignoreFilePatternRegexp;
     private transient Pattern regex = null;
+    private transient Pattern ignoreRegex = null;
     private int partitionIndex;
     private int partitionCount;
     private final transient HashSet<String> ignoredFiles = new HashSet<String>();
@@ -985,11 +987,22 @@ public abstract class AbstractFileInputOperator<T> implements InputOperator, Par
     {
       return filePatternRegexp;
     }
-
+    
+    public String getIgnoreFilePatternRegexp()
+    {
+      return ignoreFilePatternRegexp;
+    }
+    
     public void setFilePatternRegexp(String filePatternRegexp)
     {
       this.filePatternRegexp = filePatternRegexp;
       this.regex = null;
+    }
+    
+    public void setIgnoreFilePatternRegexp(String ignoreFilePatternRegexp)
+    {
+      this.ignoreFilePatternRegexp = ignoreFilePatternRegexp;
+      this.ignoreRegex = null;
     }
 
     public int getPartitionCount() {
@@ -1005,12 +1018,18 @@ public abstract class AbstractFileInputOperator<T> implements InputOperator, Par
         this.regex = Pattern.compile(this.filePatternRegexp);
       return this.regex;
     }
+    
+    protected Pattern getIgnoreRegex(){
+      if (this.ignoreRegex == null && this.ignoreFilePatternRegexp != null)
+        this.ignoreRegex = Pattern.compile(this.ignoreFilePatternRegexp);
+      return this.ignoreRegex;
+    }
 
     public LinkedHashSet<Path> scan(FileSystem fs, Path filePath, Set<String> consumedFiles)
     {
       LinkedHashSet<Path> pathSet = Sets.newLinkedHashSet();
       try {
-        LOG.debug("Scanning {} with pattern {}", filePath, this.filePatternRegexp);
+        LOG.debug("Scanning {} with filePatternRegexp={}, ignoreFilePatternRegexp={} ", filePath, this.filePatternRegexp, this.ignoreFilePatternRegexp);
         FileStatus[] files = fs.listStatus(filePath);
         for (FileStatus status : files)
         {
@@ -1060,6 +1079,15 @@ public abstract class AbstractFileInputOperator<T> implements InputOperator, Par
       {
         Matcher matcher = regex.matcher(filePathStr);
         if (!matcher.matches()) {
+          return false;
+        }
+      }
+      
+      Pattern ignoreRegex = this.getIgnoreRegex();
+      if(ignoreRegex !=null){
+        Matcher matcher = ignoreRegex.matcher(filePathStr);
+        //If matched against ignored Regex then do not accept the file. 
+        if(matcher.matches()){
           return false;
         }
       }

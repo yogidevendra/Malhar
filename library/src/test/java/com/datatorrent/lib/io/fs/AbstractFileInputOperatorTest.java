@@ -859,6 +859,91 @@ public class AbstractFileInputOperatorTest
     Assert.assertEquals("deleted operators", Sets.newHashSet(7), deleteManager.getDeletedOperators());
   }
 
+  @Test
+  public void testDirectoryScannerFiltering() throws Exception
+  {
+    String[] fileNames;
+    String positivePattern;
+    String negativePattern;
+    String[] results;
+
+    fileNames = new String[] { "file1.data", "file2.dat", "file3.data" };
+    positivePattern = ".*\\.dat";
+    negativePattern = "";
+    results = new String[] { "file2.dat" };
+    testDirectoryScanner(fileNames, positivePattern, negativePattern, results);
+    
+    fileNames = new String[] { "file1.data", "file2.dat", "file3.data" };
+    positivePattern = ".*\\.dat";
+    negativePattern = ".*\\.dat";
+    results = new String[] { };
+    testDirectoryScanner(fileNames, positivePattern, negativePattern, results);
+
+    fileNames = new String[] { "file1.data", "file2.dat", "file3.data" };
+    positivePattern = ".*\\.data";
+    negativePattern = ".*\\.dat";
+    results = new String[] { "file1.data","file3.data" };
+    testDirectoryScanner(fileNames, positivePattern, negativePattern, results);
+    
+    fileNames = new String[] { "file1.txt", "file2.txt", "file3.txt" };
+    positivePattern = ".*\\.txt";
+    negativePattern = ".*3\\.txt";
+    results = new String[] { "file1.txt","file2.txt" };
+    testDirectoryScanner(fileNames, positivePattern, negativePattern, results);
+    
+    fileNames = new String[] { "file1.txt", "file2.txt_COPYING", "file3.txt" };
+    positivePattern = ".*\\.txt";
+    negativePattern = ".*_COPYING";
+    results = new String[] { "file1.txt","file3.txt" };
+    testDirectoryScanner(fileNames, positivePattern, negativePattern, results);
+  }
+
+  private void testDirectoryScanner(String[] fileNames, String positivePattern, String negativePattern, String[] results) throws Exception
+  {
+    FileContext.getLocalFSFileContext().delete(new Path(new File(testMeta.dir).getAbsolutePath()), true);
+    for (String fileName : fileNames) {
+      FileUtils.touch(new File(testMeta.dir, fileName));
+      // createFile(fileName);
+    }
+
+    TestFileInputOperator oper = new TestFileInputOperator();
+
+    CollectorTestSink<String> queryResults = new CollectorTestSink<String>();
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    CollectorTestSink<Object> sink = (CollectorTestSink) queryResults;
+    oper.output.setSink(sink);
+
+    oper.setDirectory(testMeta.dir);
+    DirectoryScanner scanner = oper.getScanner();
+    scanner.setFilePatternRegexp(positivePattern);
+    scanner.setIgnoreFilePatternRegexp(negativePattern);
+    
+    oper.setup(testMeta.context);
+    LinkedHashSet<Path> paths = scanner.scan(oper.fs, oper.filePath, new HashSet<String>());
+    List<String> passedNames = Lists.newArrayList();
+    for(Path path: paths){
+      passedNames.add(path.getName());
+    }
+    Collections.sort(passedNames);
+    System.out.println(passedNames);
+    
+    Assert.assertArrayEquals("Directory scanner output not matching", results, passedNames.toArray());
+  }
+
+  /**
+   * 
+   */
+  private void createFile(String fileName) throws Exception
+  {
+    HashSet<String> lines = Sets.newHashSet();
+    for (int line = 0; line < 2; line++) {
+      lines.add("file:" + fileName + "_line" + line);
+    }
+    FileUtils.write(new File(testMeta.dir, fileName), StringUtils.join(lines, '\n'));
+  }
+
+
+
   private static class TestStorageManager extends IdempotentStorageManager.FSIdempotentStorageManager
   {
     Set<Integer> getDeletedOperators()
