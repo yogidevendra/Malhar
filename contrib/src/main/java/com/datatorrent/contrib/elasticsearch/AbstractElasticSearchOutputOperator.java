@@ -117,7 +117,7 @@ public abstract class AbstractElasticSearchOutputOperator<T, S extends ElasticSe
   
   /**
    * Create {@link IndexRequestBuilder} for this tuple.
-   * It calls {@link #getId(T)}, {@link #getIndexName(T)}, {@link #getType(T)}.
+   * It calls {@link #getId(T)}, {@link #getIndexName(T)}, {@link #getDocumentType(T)}.
    * 
    * @param tuple
    * @return
@@ -128,7 +128,7 @@ public abstract class AbstractElasticSearchOutputOperator<T, S extends ElasticSe
     if (id != null) {
       indexRequestBuilder.setId(id);
     }
-    indexRequestBuilder.setType(getType(tuple));
+    indexRequestBuilder.setType(getDocumentType(tuple));
     return setSource(indexRequestBuilder, tuple);
   }
 
@@ -170,7 +170,7 @@ public abstract class AbstractElasticSearchOutputOperator<T, S extends ElasticSe
    * @param tuple
    * @return
    */
-    protected abstract String getType(T tuple);
+    protected abstract String getDocumentType(T tuple);
     
     /**
      * @return the batchSize

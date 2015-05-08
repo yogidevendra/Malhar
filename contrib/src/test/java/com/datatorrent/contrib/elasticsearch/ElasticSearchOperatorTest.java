@@ -100,7 +100,7 @@ public class ElasticSearchOperatorTest
 
     operator.setIdField(ID_FIELD);
     operator.setIndexName(INDEX_NAME);
-    operator.setType(TYPE);
+    operator.setDocumentType(TYPE);
     operator.setStore(createStore());
 
     operator.setup(null);
@@ -147,7 +147,7 @@ public class ElasticSearchOperatorTest
     };
 
     operator.setIndexName(INDEX_NAME);
-    operator.setType(TYPE);
+    operator.setDocumentType(TYPE);
     operator.setStore(createStore());
 
     final List<String> tupleIDsRead = new ArrayList<String>();

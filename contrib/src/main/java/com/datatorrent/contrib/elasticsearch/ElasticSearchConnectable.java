@@ -43,14 +43,21 @@ import com.datatorrent.lib.db.Connectable;
 
 public class ElasticSearchConnectable implements Connectable
 {
+  /**
+   * Host name of the elastic search server to connect
+   */
   @NotNull
   protected String hostName;
+  /**
+   * Port number to connect on elastic search server
+   */
   @NotNull
   protected int port;
 
   protected transient TransportClient client;
 
   /**
+   * Host name of the elastic search server to connect
    * @return the hostname
    */
   public String getHostName()
@@ -59,6 +66,7 @@ public class ElasticSearchConnectable implements Connectable
   }
 
   /**
+   * Host name of the elastic search server to connect
    * @param hostname
    *          the hostname to set
    */
@@ -68,6 +76,7 @@ public class ElasticSearchConnectable implements Connectable
   }
 
   /**
+   * Port number to connect on elastic search server
    * @return the port
    */
   public int getPort()
@@ -76,6 +85,7 @@ public class ElasticSearchConnectable implements Connectable
   }
 
   /**
+   * Port number to connect on elastic search server
    * @param port
    *          the port to set
    */

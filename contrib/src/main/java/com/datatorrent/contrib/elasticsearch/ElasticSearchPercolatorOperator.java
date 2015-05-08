@@ -21,14 +21,25 @@ import com.datatorrent.common.util.DTThrowable;
  */
 public class ElasticSearchPercolatorOperator extends BaseOperator
 {
+  /**
+   * Host name of the elastic search server to connect
+   */
   @NotNull
-  public String hostName;
-  public int port;
-  
+  protected String hostName;
+  /**
+   * Port number to connect on elastic search server
+   */
+  protected int port;
+  /**
+   * Name of the index in elastic search
+   */
   @NotNull
-  public String indexName;
+  protected String indexName;
+  /**
+   * Type of document in elasticsearch
+   */
   @NotNull
-  public String documentType;
+  protected String documentType;
 
   protected transient ElasticSearchPercolatorStore store;
   public final transient DefaultOutputPort<PercolateResponse> outputPort = new DefaultOutputPort<PercolateResponse>();
@@ -49,6 +60,7 @@ public class ElasticSearchPercolatorOperator extends BaseOperator
     }
   };
 
+  @Override
   public void setup(com.datatorrent.api.Context.OperatorContext context)
   {
     store = new ElasticSearchPercolatorStore(hostName, port);
@@ -72,4 +84,77 @@ public class ElasticSearchPercolatorOperator extends BaseOperator
       DTThrowable.rethrow(e);
     }
   }
+  
+  /**
+   * Host name of the elastic search server to connect
+   * @return the hostName
+   */
+  public String getHostName()
+  {
+    return hostName;
+  }
+  
+  /**
+   * Host name of the elastic search server to connect
+   * @param hostName the hostName to set
+   */
+  public void setHostName(String hostName)
+  {
+    this.hostName = hostName;
+  }
+  
+  
+  
+  /**
+   * @return the port
+   */
+  public int getPort()
+  {
+    return port;
+  }
+  
+  /**
+   * @param port the port to set
+   */
+  public void setPort(int port)
+  {
+    this.port = port;
+  }
+  
+  /**
+   * Name of the index in elastic search
+   * @return the indexName
+   */
+  public String getIndexName()
+  {
+    return indexName;
+  }
+  
+  /**
+   * Name of the index in elastic search
+   * @param indexName the indexName to set
+   */
+  public void setIndexName(String indexName)
+  {
+    this.indexName = indexName;
+  }
+  
+  /**
+   * Type of document in elasticsearch
+   * @return the documentType
+   */
+  public String getDocumentType()
+  {
+    return documentType;
+  }
+  
+  /**
+   * Type of document in elasticsearch
+   * @param documentType the documentType to set
+   */
+  public void setDocumentType(String documentType)
+  {
+    this.documentType = documentType;
+  }
+  
 }

@@ -29,9 +29,18 @@ import org.slf4j.LoggerFactory;
 public class ElasticSearchMapOutputOperator<T extends Map<String, Object>> extends AbstractElasticSearchOutputOperator<T, ElasticSearchConnectable>
 {
   private static final Logger logger = LoggerFactory.getLogger(ElasticSearchMapOutputOperator.class);
+  /**
+   * Field name indicating unique id for document
+   */
   private String idField;
+  /**
+   * Name of the index in elastic search
+   */
   private String indexName;
-  private String type;
+  /**
+   * Type of document in elasticsearch
+   */
+  private String documentType;
 
   /**
    * 
@@ -72,6 +81,7 @@ public class ElasticSearchMapOutputOperator<T extends Map<String, Object>> exten
   }
 
   /**
+   * Field name indicating unique id for document
    * @param idField
    *          the idField to set
    */
@@ -81,6 +91,7 @@ public class ElasticSearchMapOutputOperator<T extends Map<String, Object>> exten
   }
 
   /**
+   * Field name indicating unique id for document
    * @return the idField
    */
   public String getIdField()
@@ -89,6 +100,7 @@ public class ElasticSearchMapOutputOperator<T extends Map<String, Object>> exten
   }
 
   /**
+   * Name of the index in elastic search
    * @param indexName
    *          the indexName to set
    */
@@ -109,20 +121,21 @@ public class ElasticSearchMapOutputOperator<T extends Map<String, Object>> exten
   }
 
   /**
+   * Type of document in elasticsearch
    * @param type
    *          the type to set
    */
-  public void setType(String type)
+  public void setDocumentType(String type)
   {
-    this.type = type;
+    this.documentType = type;
   }
 
   /* (non-Javadoc)
    * @see com.datatorrent.contrib.elasticsearch.AbstractElasticSearchOutputOperator#getType(java.lang.Object)
    */
   @Override
-  protected String getType(T tuple)
+  protected String getDocumentType(T tuple)
   {
-    return type;
+    return documentType;
   }  
 }

@@ -25,14 +25,21 @@ import org.elasticsearch.search.SearchHit;
 import com.datatorrent.api.Context.OperatorContext;
 
 /**
- * 
+ * Operator to documents from Elastic search as Map
  */
 public abstract class ElasticSearchMapInputOperator<T extends Map<String, Object>> extends AbstractElasticSearchInputOperator<T, ElasticSearchConnectable>
 {
+  /**
+   * Name of the index in elasticsearch
+   */
   @NotNull
   protected String indexName;
+ 
+  /**
+   * Type of document in elasticsearch
+   */
   @NotNull
-  protected String type;
+  protected String documentType;
 
   /**
    * 
@@ -51,7 +58,7 @@ public abstract class ElasticSearchMapInputOperator<T extends Map<String, Object
   public void setup(OperatorContext t1)
   {
     super.setup(t1);
-    searchRequestBuilder.setIndices(indexName).setTypes(type).setSearchType(SearchType.DFS_QUERY_THEN_FETCH);
+    searchRequestBuilder.setIndices(indexName).setTypes(documentType).setSearchType(SearchType.DFS_QUERY_THEN_FETCH);
   }
 
   /*
@@ -69,6 +76,7 @@ public abstract class ElasticSearchMapInputOperator<T extends Map<String, Object
   }
 
   /**
+   * Name of the index in elastic search
    * @param indexName
    *          the indexName to set
    */
@@ -78,28 +86,30 @@ public abstract class ElasticSearchMapInputOperator<T extends Map<String, Object
   }
 
   /**
+   * Name of the index in elastic search
    * @return the indexName
    */
   public String getIndexName()
   {
     return indexName;
   }
-
+  
   /**
-   * @param type
-   *          the type to set
+   * Type of document in elasticsearch 
+   * @param documentType the documentType to set
    */
-  public void setType(String type)
+  public void setDocumentType(String documentType)
   {
-    this.type = type;
+    this.documentType = documentType;
   }
-
+  
   /**
-   * @return the type
+   * Type of document in elasticsearch 
+   * @return the documentType
    */
-  public String getType()
+  public String getDocumentType()
   {
-    return type;
+    return documentType;
   }
 
 }
